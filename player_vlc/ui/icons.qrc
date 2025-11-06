@@ -2,13 +2,15 @@
   <qresource prefix="w">
     <file>forward.svg</file>
     <file>backward.svg</file>
-    <file>image-svgrepo-com (1).svg</file>
-    <file>image-svgrepo-com.svg</file>
     <file>next.svg</file>
     <file>previous.svg</file>
-    <file>play2.svg</file>
-    <file>pause2.svg</file>
-    <file>stop2.svg</file>
-    <file>setting-svgrepo-com.svg</file>
+    <file>setting.svg</file>
+    <file>stop.svg</file>
+    <file>play.svg</file>
+    <file>pause.svg</file>
+    <file>image.svg</file>
+    <file>config.svg</file>
+    <file>gear.svg</file>
+    <file>settings2.svg</file>
   </qresource>
 </RCC>

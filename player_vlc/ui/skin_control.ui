@@ -59,7 +59,7 @@
        </property>
        <property name="icon">
         <iconset resource="icons.qrc">
-         <normaloff>:/w/play2.svg</normaloff>:/w/play2.svg</iconset>
+         <normaloff>:/w/play.svg</normaloff>:/w/play.svg</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -171,7 +171,7 @@
              </property>
              <property name="icon">
               <iconset resource="icons.qrc">
-               <normaloff>:/w/stop2.svg</normaloff>:/w/stop2.svg</iconset>
+               <normaloff>:/w/stop.svg</normaloff>:/w/stop.svg</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -399,7 +399,7 @@
              </property>
              <property name="icon">
               <iconset resource="icons.qrc">
-               <normaloff>:/w/image-svgrepo-com (1).svg</normaloff>:/w/image-svgrepo-com (1).svg</iconset>
+               <normaloff>:/w/image.svg</normaloff>:/w/image.svg</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -437,7 +437,7 @@
        </property>
        <property name="icon">
         <iconset resource="icons.qrc">
-         <normaloff>:/w/setting-svgrepo-com.svg</normaloff>:/w/setting-svgrepo-com.svg</iconset>
+         <normaloff>:/w/settings2.svg</normaloff>:/w/settings2.svg</iconset>
        </property>
        <property name="iconSize">
         <size>
