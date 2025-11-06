@@ -2,11 +2,10 @@
 
 widget: video player con vlc para `Pyside6` 
 
-![](otros/captura.png)
+![](otros/capture.png)
 
 ## Librerias
 - PySide6            6.9.3
-- pymediainfo        7.0.1
 
 
 ## notas
@@ -28,11 +27,14 @@ widget: video player con vlc para `Pyside6`
 - ahora cambia el icono de play y pause
 - ya obtiene la duracion sin mediainfo (falta limpiar)
 - cambie y renombre los iconos en el qrc
+- [x] acomodar y limpiar core
+- [x] acomodar y limpiar widget
+- [x] coherencia en los nombres y documentar
+- [x] widget listo para usar como modulo (ya no desde un test)
+- la clase controles tiene un metodo stop para
+- le coloque estilos a los sliders de tiempo y volumen
 
 
 ## to do
-- [ ] acomodar y limpiar core
-- [ ] acomodar y limpiar widget
-- [ ] coherncia en los nombres y documentar
-- [ ] widget listo para usar como modulo (ya no desde un test)
+- [ ] bug: al tratar de adelantar durante los primeros segundos no puede adelatar (no se porque ocurre esto si luego funciona normal)
 

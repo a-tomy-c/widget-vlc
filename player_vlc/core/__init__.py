@@ -1,28 +1,8 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout
 from PySide6.QtCore import QTimer, Signal, QTime
 import platform
 from pathlib import Path
-import player_vlc.vlc as vlc
-from pymediainfo import MediaInfo
-
-
-class InfoVideo():
-    def __init__(self, file:str):
-        self.file = file
-        self._cnf_InfoVideo()
-
-    def _cnf_InfoVideo(self):
-        mi = MediaInfo.parse(filename=self.file)
-        track_video:list = mi.video_tracks
-        self.data = dict()
-        for track in track_video:
-            self.data.update(track.to_data())
-        
-    def get(self, key:str) -> str|None:
-        return self.data.get(key, None)
-    
-    def get_duration(self) -> str:
-        return self.get('duration')
+import player_vlc.core.vlc as vlc
 
 
 class _Arguments:
@@ -82,13 +62,14 @@ class CoreVlc(QWidget):
     def _cnf_CoreVlc(self):
         self._FILE = None
         self._POSITION = 0.0
+        self.JUMP = 3000
 
         self.timer = QTimer(self)        
         self.instance = vlc.Instance(_Arguments().get_vlc_args())
         self.player = self.instance.media_player_new()
-        self.video_widget = QWidget()
+        self.video_widget = QWidget(self)
         self.video_widget.setStyleSheet('background-color:#000000;')
-        vly = QHBoxLayout(self)
+        vly = QVBoxLayout(self)
         vly.addWidget(self.video_widget)
         vly.setContentsMargins(0,0,0,0)
 
@@ -107,8 +88,6 @@ class CoreVlc(QWidget):
         """asigna el archivo de video"""
         self.player.set_media(self.instance.media_new(filename))
         self._FILE = filename
-        # duration = self.get_duration()
-        # print(duration)
 
     def toggle_playback(self):
         """intercambia entre play y pause"""
@@ -160,21 +139,19 @@ class CoreVlc(QWidget):
         """toma una captura del frame actual y lo guarda con su timestamp como nombre"""
         if not self.get_media() or self.get_time() < 0:
             return
-        # time:int = self.get_time()
-        # if time < 0:
-        #     return
+
         path = Path(self.get_media()).parent.as_posix()
         name = self.get_timestamp().replace(':', '.')
         output = f'{path}/{name}.jpg'
         success = self.player.video_take_snapshot(0, output, 0, 0)
         return f'CAP:{name}.jpg' if success==0 else 'CAP:ERROR'
     
-    def _set_position(self, pos:int):
+    def _add_time(self, msec:int):
         """funcion base para mover la posicion adelantar o retrasar"""
         if not self.get_media():
             return
         time:int = self.get_time()
-        new_time = 0 if time < pos else time+pos
+        new_time = 0 if time < msec else time + msec
         self.player.set_time(new_time)
 
     def set_position(self, pos:float):
@@ -183,38 +160,28 @@ class CoreVlc(QWidget):
 
     def _next(self):
         """adelantar corto"""
-        self._set_position(100)
+        self._add_time(100)
         if self.get_state()==3:
             self.pause()
 
     def _previous(self):
         """retrasar corto"""
-        self._set_position(-100)
+        self._add_time(-100)
         if self.get_state()==3:
             self.pause()
 
     def forward(self):
         """adelantar 3 segundos"""
-        self._set_position(3000)
+        self._add_time(self.JUMP)
 
     def backward(self):
         "retrasar 3 segundos"
-        self._set_position(-3000)
+        self._add_time(-self.JUMP)
 
     def __event_position_changed(self, e=None):
         """lanzar evento al cambiar la posicion"""
         self._POSITION = self.get_time()
         self.positionChanged.emit(self._POSITION)
-
-    def _test_change_media(self, e=None):
-        print("change media")
-        duration = self.get_length()
-        print(f'duration:{type(duration)} -|{duration}')
-
-    def get_duration(self):
-        iv = InfoVideo(self.get_media())
-        return iv.get_duration()
-    
 
     def get_duration_timestamp(self):
         """retorna la duracion como timestamp 00:00:00.000"""
