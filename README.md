@@ -2,6 +2,7 @@
 
 widget: video player con vlc para `Pyside6` 
 
+![](otros/captura.png)
 
 ## Librerias
 - PySide6            6.9.3
@@ -28,3 +29,6 @@ widget: video player con vlc para `Pyside6`
 ## to do
 - [ ] acomodar y limpiar
 - [ ] coherncia en los nombres y documentar
+- [ ] agregar retraso a la funcion length
+- [ ] widget listo para usar como modulo (ya no desde un test)
+
