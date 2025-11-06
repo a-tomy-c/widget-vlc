@@ -3,6 +3,28 @@ from PySide6.QtCore import QTimer, Signal, QTime
 import platform
 from pathlib import Path
 import player_vlc.vlc as vlc
+from pymediainfo import MediaInfo
+from pprint import pprint
+
+
+
+class InfoVideo():
+    def __init__(self, file:str):
+        self.file = file
+        self._cnf_InfoVideo()
+
+    def _cnf_InfoVideo(self):
+        mi = MediaInfo.parse(filename=self.file)
+        track_video:list = mi.video_tracks
+        self.data = dict()
+        for track in track_video:
+            self.data.update(track.to_data())
+        
+    def get(self, key:str) -> str|None:
+        return self.data.get(key, None)
+    
+    def get_duration(self) -> str:
+        return self.get('duration')
 
 
 
@@ -55,6 +77,8 @@ class _Arguments:
 
 class CoreVlc(QWidget):
     """CORE video player:vlc"""
+    positionChanged = Signal(float)
+
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
         self._cnf_CoreVlc()
@@ -64,6 +88,7 @@ class CoreVlc(QWidget):
         self._FILE = None
         self._VOLUME = 60
         self._STD = ''
+        self._POSITION = 0.0
 
         self.timer = QTimer(self)        
         self.instance = vlc.Instance(_Arguments().get_vlc_args())
@@ -82,10 +107,17 @@ class CoreVlc(QWidget):
             case 'windows':self.player.set_hwnd(nid)
             case _:self.player.set_hwnd(self.winId())
 
+        self.mng = self.player.event_manager()
+        # self.mng.event_attach(vlc.EventType.MediaPlayerPositionChanged, self._test_show_pos)
+        self.mng.event_attach(vlc.EventType.MediaPlayerTimeChanged, self._test_show_pos)
+        # self.mng.event_attach(vlc.EventType.MediaPlayerMediaChanged, self._test_change_media)
+
     def set_media(self, filename:str):
         """asigna el archivo de video"""
         self.player.set_media(self.instance.media_new(filename))
         self._FILE = filename
+        # duration = self.get_duration()
+        # print(duration)
 
     def toggle_playback(self):
         self.pause() if self.player.is_playing() else self.play()
@@ -93,6 +125,7 @@ class CoreVlc(QWidget):
     def play(self):
         self.player.play()
         self.timer.start()
+        print(self.get_length())
 
     def stop(self):
         self.player.stop()
@@ -126,7 +159,7 @@ class CoreVlc(QWidget):
         return self.msec_to_ts(self.get_time(), with_msec)
 
     def get_state(self) -> str:
-        """obten el estado (int) = 4:paused, 6:ended"""
+        """obten el estado (int) = 3:playing, 4:paused, 6:ended"""
         return self.player.get_state()
 
     def take_capture(self) -> str:
@@ -139,7 +172,7 @@ class CoreVlc(QWidget):
         name = self.get_timestamp().replace(':', '.')
         output = f'{path}/{name}.jpg'
         success = self.player.video_take_snapshot(0, output, 0, 0)
-        return 'CAPTURE:{name}.jpg' if success==0 else 'CAPTURE:ERROR'
+        return f'CAP:{name}.jpg' if success==0 else 'CAP:ERROR'
     
     def _set_position(self, pos:int):
         if not self.get_media():
@@ -148,15 +181,39 @@ class CoreVlc(QWidget):
         new_time = 0 if time < pos else time+pos
         self.player.set_time(new_time)
 
+    def set_position(self, pos:float):
+        """de 0.0 a 1.0"""
+        self.player.set_position(pos)
+
     def _next(self):
         self._set_position(100)
+        if self.get_state()==3:
+            self.pause()
 
     def _previous(self):
         self._set_position(-100)
+        if self.get_state()==3:
+            self.pause()
 
     def forward(self):
         self._set_position(3000)
 
     def backward(self):
         self._set_position(-3000)
+
+    def _test_show_pos(self, e=None):
+        # print(f'e:{type(e)} -|{e}')
+        # print(self.get_timestamp())
+        # print(self.get_timestamp(False))
+        self._POSITION = self.get_time()
+        self.positionChanged.emit(self._POSITION)
+
+    def _test_change_media(self, e=None):
+        print("change media")
+        duration = self.get_length()
+        print(f'duration:{type(duration)} -|{duration}')
+
+    def get_duration(self):
+        iv = InfoVideo(self.get_media())
+        return iv.get_duration()
 

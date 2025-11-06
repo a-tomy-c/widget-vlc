@@ -31,6 +31,19 @@ class Ui_Control(object):
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setSpacing(4)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, -1, 0, -1)
+        self.btn_play = QPushButton(Control)
+        self.btn_play.setObjectName(u"btn_play")
+        self.btn_play.setMinimumSize(QSize(35, 24))
+        self.btn_play.setMaximumSize(QSize(35, 24))
+        icon = QIcon()
+        icon.addFile(u":/w/play2.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btn_play.setIcon(icon)
+        self.btn_play.setIconSize(QSize(20, 20))
+        self.btn_play.setFlat(True)
+
+        self.horizontalLayout_5.addWidget(self.btn_play)
+
         self.sw = QStackedWidget(Control)
         self.sw.setObjectName(u"sw")
         self.pag1 = QWidget()
@@ -42,20 +55,9 @@ class Ui_Control(object):
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setSpacing(4)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.btn_play = QPushButton(self.pag1)
-        self.btn_play.setObjectName(u"btn_play")
-        self.btn_play.setMinimumSize(QSize(35, 24))
-        self.btn_play.setMaximumSize(QSize(35, 24))
-        icon = QIcon()
-        icon.addFile(u":/w/play2.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btn_play.setIcon(icon)
-        self.btn_play.setIconSize(QSize(20, 20))
-        self.btn_play.setFlat(True)
-
-        self.horizontalLayout.addWidget(self.btn_play)
-
         self.sld_time = QSlider(self.pag1)
         self.sld_time.setObjectName(u"sld_time")
+        self.sld_time.setMaximum(100)
         self.sld_time.setOrientation(Qt.Orientation.Horizontal)
 
         self.horizontalLayout.addWidget(self.sld_time)
@@ -129,7 +131,14 @@ class Ui_Control(object):
 
         self.lb_info = QLabel(self.pag2)
         self.lb_info.setObjectName(u"lb_info")
-        self.lb_info.setFont(font)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lb_info.sizePolicy().hasHeightForWidth())
+        self.lb_info.setSizePolicy(sizePolicy)
+        font1 = QFont()
+        font1.setPointSize(9)
+        self.lb_info.setFont(font1)
 
         self.horizontalLayout_3.addWidget(self.lb_info)
 
@@ -168,8 +177,8 @@ class Ui_Control(object):
 
         self.btn_capture = QPushButton(self.pag2)
         self.btn_capture.setObjectName(u"btn_capture")
-        self.btn_capture.setMinimumSize(QSize(30, 24))
-        self.btn_capture.setMaximumSize(QSize(30, 24))
+        self.btn_capture.setMinimumSize(QSize(40, 24))
+        self.btn_capture.setMaximumSize(QSize(40, 24))
         icon6 = QIcon()
         icon6.addFile(u":/w/image-svgrepo-com (1).svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btn_capture.setIcon(icon6)
