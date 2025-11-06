@@ -36,5 +36,6 @@ widget: video player con vlc para `Pyside6`
 
 
 ## to do
-- [ ] bug: al tratar de adelantar durante los primeros segundos no puede adelatar (no se porque ocurre esto si luego funciona normal)
+- [ ] bug: al tratar de adelantar durante los primeros segundos no puede adelantar (no se porque ocurre esto si luego funciona normal)
+- [ ] probar en windows (por el momento solo lo probe en linux)
 
